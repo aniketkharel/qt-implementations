@@ -1,30 +1,23 @@
 #include "dialog.h"
 #include "ui_dialog.h"
 
-#include <QInputDialog>
-
 Dialog::Dialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::Dialog)
 {
     ui->setupUi(this);
-    model = new QDirModel(this);
+    model = new QStringListModel(this);
 
-    //read only mode
-    model->setReadOnly(false);
+    QStringList list ;
+    list << "mark" << "tony" << "birds" << "avenger";
 
-    //sort first by directory , ignore case and sort by Name
-    model->setSorting(QDir::DirsFirst | QDir::IgnoreCase | QDir::Name);
+    model->setStringList(list);
 
-    //sets model to our tree view
-    ui->treeView->setModel(model);
-
-    QModelIndex index = model->index("D:/");
-
-    ui->treeView->expand(index);
-      ui->treeView->scrollTo(index);
-        ui->treeView->setCurrentIndex(index);
-          ui->treeView->resizeColumnToContents(0);
+    ui->listView->setModel(model);
+    ui->comboBox->setModel(model);
+    ui->listView->
+            setEditTriggers(QAbstractItemView::AnyKeyPressed
+                            | QAbstractItemView::DoubleClicked);
 }
 
 Dialog::~Dialog()
@@ -33,35 +26,34 @@ Dialog::~Dialog()
 }
 
 
-void Dialog::on_pushButton_clicked()
+void Dialog::on_addBtn_clicked()
 {
-    //make directroy
-    QModelIndex index = ui->treeView->currentIndex();
-    if(!index.isValid()){
-        return;
-    }else{
-        QString name = QInputDialog::getText(this,"Name","Enter Name");
-        if(name.isEmpty()){
-            return;
-        }else{
-            model->mkdir(index,name);
-        }
-    }
-
+    //add
+    //counts row in that model
+    int row = model->rowCount();
+    //add how many ?
+    model->insertRows(row,1);
+    //current index in a model
+    QModelIndex index = model->index(row);
+    //set current index in list view
+    ui->listView->setCurrentIndex(index);
+    //edit mode on that index
+    ui->listView->edit(index);
 }
 
-void Dialog::on_pushButton_2_clicked()
+void Dialog::on_insertBtn_clicked()
 {
-    //delete directory
-    //make directroy
-    QModelIndex index = ui->treeView->currentIndex();
-    if(!index.isValid()){
-        return;
-    }else if(model->fileInfo(index).isDir()){
-        //directory
-        model->rmdir(index);
-    }else{
-        model->remove(index);
-    }
+    //insert
+    //add
+    int row = ui->listView->currentIndex().row();
+    model->insertRows(row,1);
+    QModelIndex index = model->index(row);
+    ui->listView->setCurrentIndex(index);
+    ui->listView->edit(index);
+}
 
+void Dialog::on_deleteBtn_clicked()
+{
+    //delete
+    model->removeRows(ui->listView->currentIndex().row(),1);
 }

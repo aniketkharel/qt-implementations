@@ -4,7 +4,6 @@
 #include <QDialog>
 #include <QtCore>
 #include <QtGui>
-#include <QDirModel>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Dialog; }
@@ -19,12 +18,14 @@ public:
     ~Dialog();
 
 private slots:
-    void on_pushButton_clicked();
+    void on_addBtn_clicked();
 
-    void on_pushButton_2_clicked();
+    void on_insertBtn_clicked();
+
+    void on_deleteBtn_clicked();
 
 private:
     Ui::Dialog *ui;
-    QDirModel *model;
+    QStringListModel *model;
 };
 #endif // DIALOG_H
