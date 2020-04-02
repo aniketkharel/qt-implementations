@@ -3,8 +3,8 @@
 
 #include <QDialog>
 #include <QtCore>
-#include <QFileSystemModel>
 #include <QtGui>
+#include <QDirModel>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Dialog; }
@@ -19,11 +19,12 @@ public:
     ~Dialog();
 
 private slots:
-    void on_treeView_clicked(const QModelIndex &index);
+    void on_pushButton_clicked();
+
+    void on_pushButton_2_clicked();
 
 private:
     Ui::Dialog *ui;
-    QFileSystemModel *dirModel;
-    QFileSystemModel *fileModel;
+    QDirModel *model;
 };
 #endif // DIALOG_H
